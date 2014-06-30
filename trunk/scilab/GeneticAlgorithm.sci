@@ -23,6 +23,9 @@ function best_fit = GeneticAlgorithm(population, target)
 //           new_population = mycat(new_population,new_individual);
 //        end
         i=1;
+        if mutationTest()==1 then
+            population(:,:,best_individual)=mutation(population(:,:,best_individual));
+       end
         new_population = mycat(new_population,population(:,:,best_individual));
         i=i+1;
         while i < population_size
@@ -30,7 +33,8 @@ function best_fit = GeneticAlgorithm(population, target)
            y=randomSelection(population);
 
            if crossoverTest()==1 then
-               [new_individual1,new_individual2] = crossover2(x,y);
+               //[new_individual1,new_individual2] = crossover2(x,y);
+               [new_individual1,new_individual2] = crossover3(x,y);
                if mutationTest()==1 then
                     new_individual1=mutation(new_individual1);
                end

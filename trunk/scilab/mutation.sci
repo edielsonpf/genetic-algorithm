@@ -1,6 +1,8 @@
 function mutation_indivudual = mutation(individual)
     
-    //number of simblos
+    disp("Individual before mutation:")
+    disp(individual);
+    //number of simbols
     //Symbols = 8;
     Symbols = 6;
     //Symbols = 4;
@@ -10,4 +12,8 @@ function mutation_indivudual = mutation(individual)
     randomValue = grand(1, 1, "uin", 1, Symbols);
     individual(1,randomPosition)=randomValue;
     mutation_indivudual = individual;
+    disp("Mutation at position: "+string(randomPosition));
+    disp("Mutation to value: "+string(randomValue));
+    disp("Individual after mutation:")
+    disp(mutation_indivudual);
 endfunction
