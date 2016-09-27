@@ -15,7 +15,7 @@ class genetic_algorithm(object):
         Constructor
         '''
         self.__mutationRate = mutation_rate
-        self.__elitism = False;
+        self.__elitism = True;
         self.problem = problem
         self.best_fit = 0
         self.best_individual = []
@@ -161,7 +161,7 @@ class genetic_algorithm(object):
     
     def search(self, population_size, max_generation, target):
         
-        generation = 0
+        generation = 1
         fit_historical=[]
         
         self.population = self.problem.initPopulation(population_size)
@@ -171,13 +171,13 @@ class genetic_algorithm(object):
         print("Generation: %d" %generation)
         print("Population: %s" %self.population)
         print("Best fit: Individual %d = %d" %(self.best_individual,self.best_fit))
-            
+        
+        fit_historical.append(self.best_fit)
+                    
         while (self.best_fit < target) and (generation < max_generation):
             
-            fit_historical.append(self.best_fit)
-            
             generation=generation+1
-    
+            
             self.population=self.__newPopulation(population_size)      
             
             self.best_fit,self.best_individual = self.__bestFitness()
@@ -185,5 +185,12 @@ class genetic_algorithm(object):
             print("\r\nGeneration: %d" %generation)
             print("Population: %s" %self.population)
             print("Best fit: Individual[%d] = %d" %(self.best_individual,self.best_fit))
-        
+            
+            fit_historical.append(self.best_fit)
+            
+        if self.best_fit >= target:
+            print("Solution found: %s\r\n" %self.population[self.best_individual])
+        else:
+            print("Solution not found!\r\n")
+            
         return fit_historical,generation    

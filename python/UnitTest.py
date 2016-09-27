@@ -7,11 +7,11 @@ NumIndividuals = 10
 MinSymbol = 1
 MaxSymbol = 8
 IndividualSize = 8
-MutationRate = 0.1
+MutationRate = 0.2
 
 problem = EightQueens(MinSymbol, MaxSymbol, IndividualSize)
 
-MaxGeneration = 1000
+MaxGeneration = 8000
 Target = 28
 
 ClassHandle  = genetic_algorithm(problem,MutationRate)
