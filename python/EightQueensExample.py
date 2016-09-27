@@ -59,3 +59,16 @@ class EightQueens(object):
                         if((individual[j]-(k-j))!=individual[k]): # queens are not at the same inferior diagonal
                             fitness=fitness+1; 
         return fitness
+    
+    def printSolution(self,solution):
+        
+        for i in range(self.individual_size):
+            for j in range(self.individual_size):
+                if i+1 == solution[j]:
+                    output='Q '
+                else:
+                    output = '. '
+                if j == self.individual_size-1:
+                    print(output)
+                else:
+                    print(output),    

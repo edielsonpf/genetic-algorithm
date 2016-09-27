@@ -70,12 +70,24 @@ class genetic_algorithm(object):
         
         c = np.random.uniform(1,n)
         d = np.random.uniform(1,n)    
-        # concatenate the two fathers in the C element chosen randomly
-        new_individual_x=[individual_x[1:c], individual_y[c+1:d], individual_x[d+1:n]]
-        new_individual_y=[individual_y[1:c], individual_x[c+1:d], individual_y[d+1:n]]
         print("crossing point 1: %d" %c)
         print("crossing point 2: %d" %d)
-        print("New individuals generated: %s and %s" %(new_individual_x,new_individual_y));
+        
+        new_individual_x=[]
+        new_individual_y=[]
+        
+        # concatenate the two fathers in the C element chosen randomly
+        for gene in range(c):
+            new_individual_x.append(individual_x[gene])
+            new_individual_y.append(individual_y[gene])
+        
+        for gene in range(c,d):
+            new_individual_y.append(individual_y[gene])
+            new_individual_x.append(individual_x[gene])
+            
+        for gene in range(d,n):    
+            new_individual_x.append(individual_x[gene])
+            new_individual_y.append(individual_y[gene])
         
         return new_individual_x,new_individual_y
     
@@ -192,5 +204,7 @@ class genetic_algorithm(object):
             print("Solution found: %s\r\n" %self.population[self.best_individual])
         else:
             print("Solution not found!\r\n")
+        
+        self.problem.printSolution(self.population[self.best_individual])
             
         return fit_historical,generation    
