@@ -10,11 +10,15 @@ class genetic_algorithm(object):
     classdocs
     '''
 
-    def __init__(self, problem):
+    def __init__(self, problem, mutation_rate):
         '''
         Constructor
         '''
+        self.__mutationRate = mutation_rate
+        self.__elitism = False;
         self.problem = problem
+        self.best_fit = 0
+        self.best_individual = []
     
     def __mutation(self,individual):
         
@@ -22,15 +26,15 @@ class genetic_algorithm(object):
             randomPosition = int(np.random.uniform(0,self.problem.getIndividualSize()-1))
             print('Mutation at position: %d' %randomPosition)
             #get a random value for changing in the individual position selected before
-            randomValue = int(np.random.uniform(1,self.problem.getMaxSymbol()))
-            print('New value: %d' %randomValue)
+            randomValue = int(np.random.uniform(self.problem.getMinGeneSymbol(),self.problem.getMaxGeneSymbol()))
+            print('New gene value: %d' %randomValue)
             
             individual[randomPosition]=randomValue
         return individual
     
     def __mutationTest(self):
         a=[0, 1]
-        p=[0.90, 0.10]
+        p=[1-self.__mutationRate, self.__mutationRate]
         #Get the cumulative sum of the probabilities.
         cumSumP = np.cumsum(p)
         #Get our random numbers - one for each column.
@@ -123,13 +127,20 @@ class genetic_algorithm(object):
         self.population = sorted_population
         selected = self.population[i]
         #Display it. Uncomment for log.
-        print("Selected individual %d = %s" %(i,selected))
+        print("Selected individual [%d] = %s" %(i,selected))
         return selected
         
     def __newPopulation(self,population_size):
         
         new_population = []
-        for i in range(0,population_size,2):
+        offset_population_index=0
+        
+        if self.__elitism:
+            new_population.append(self.population[self.best_individual])
+            offset_population_index=1
+        
+        
+        for i in range(offset_population_index,population_size,2):
             #Selection
             x = self.__selection()
             y = self.__selection()
@@ -154,26 +165,25 @@ class genetic_algorithm(object):
         fit_historical=[]
         
         self.population = self.problem.initPopulation(population_size)
-        print(self.population)
         
-        best_fit,best_individual = self.__bestFitness()
+        self.best_fit,self.best_individual = self.__bestFitness()
         
         print("Generation: %d" %generation)
         print("Population: %s" %self.population)
-        print("Best fit: Individual %d = %d" %(best_individual,best_fit))
+        print("Best fit: Individual %d = %d" %(self.best_individual,self.best_fit))
             
-        while (best_fit < target) and (generation < max_generation):
+        while (self.best_fit < target) and (generation < max_generation):
             
-            fit_historical.append(best_fit)
+            fit_historical.append(self.best_fit)
             
             generation=generation+1
     
             self.population=self.__newPopulation(population_size)      
             
-            best_fit,best_individual = self.__bestFitness()
+            self.best_fit,self.best_individual = self.__bestFitness()
     
             print("\r\nGeneration: %d" %generation)
             print("Population: %s" %self.population)
-            print("Best fit: Individual[%d] = %d" %(best_individual,best_fit))
+            print("Best fit: Individual[%d] = %d" %(self.best_individual,self.best_fit))
         
         return fit_historical,generation    

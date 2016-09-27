@@ -4,15 +4,17 @@ import matplotlib.pyplot as plt
 
 
 NumIndividuals = 10
+MinSymbol = 1
 MaxSymbol = 8
 IndividualSize = 8
+MutationRate = 0.1
 
-problem = EightQueens(MaxSymbol, IndividualSize)
+problem = EightQueens(MinSymbol, MaxSymbol, IndividualSize)
 
 MaxGeneration = 1000
 Target = 28
 
-ClassHandle  = genetic_algorithm(problem)
+ClassHandle  = genetic_algorithm(problem,MutationRate)
 fit,generation = ClassHandle.search(NumIndividuals, MaxGeneration, Target)
 
 interaction=[i for i in range(generation)]
