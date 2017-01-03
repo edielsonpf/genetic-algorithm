@@ -10,12 +10,15 @@ class genetic_algorithm(object):
     classdocs
     '''
 
-    def __init__(self, problem, mutation_rate):
+    def __init__(self, problem, mutation_rate, elitism = None):
         '''
         Constructor
         '''
         self.__mutationRate = mutation_rate
-        self.__elitism = True;
+        if(elitism == None):
+            self.__elitism = False
+        else:
+            self.__elitism = elitism
         self.problem = problem
         self.best_fit = 0
         self.best_individual = []
