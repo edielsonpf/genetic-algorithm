@@ -1,9 +1,13 @@
+import sys
+import os.path
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
 from genetic_algorithm.ga import genetic_algorithm
 from EightQueensExample import EightQueens
 import matplotlib.pyplot as plt
 
 
-NumIndividuals = 10
+NumIndividuals = 20
 MinSymbol = 1
 MaxSymbol = 8
 IndividualSize = 8
@@ -11,7 +15,7 @@ MutationRate = 0.2
 
 problem = EightQueens(MinSymbol, MaxSymbol, IndividualSize)
 
-MaxGeneration = 800
+MaxGeneration = 2000
 Target = 28
 Elitism = False
 
