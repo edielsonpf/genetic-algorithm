@@ -19,13 +19,18 @@ class Rosembrock(object):
         self.x2_min = x2_min
         self.x2_max = x2_max
         self.individual_size = individual_size
+        self.max_symbol = 1
+        self.min_symbol = 0
         
+        
+    def Rosembrock_Function(self, x1,x2):
+        return (1.0-x1)**2 + 1*(x2-x1**2)**2 
         
     def x1Real(self, x1Decimal):
-        return self.x1_min+(self.x1_max - self.x1_min)/(2**self.individual_size/2)*x1Decimal
+        return self.x1_min+(self.x1_max - self.x1_min)/(2.0**self.individual_size/2)*x1Decimal
     
     def x2Real(self, x2Decimal):
-        return self.x2_min+(self.x2_max - self.x2_min)/(2**self.individual_size/2)*x2Decimal
+        return self.x2_min+(self.x2_max - self.x2_min)/(2.0**self.individual_size/2)*x2Decimal
         
     def initPopulation(self, num_individuals):
         
@@ -39,46 +44,47 @@ class Rosembrock(object):
             population.append(individual.tolist())
         return population    
     
-#    def fitness(self,population):
-#    
-#        fitnessPop=[]
-#        #calculate the fitness for each individual of population
-#        for individual in population:
-#            fitnessPop.append(self.getFitness(individual))
-#    
-#        return fitnessPop
-#    
-#    def getIndividualSize(self):
-#        return self.individual_size
-#    
-#    def getMaxGeneSymbol(self):
-#        return self.max_symbol
-#    
-#    def getMinGeneSymbol(self):
-#        return self.min_symbol
-#    
-#    
-#    def getFitness(self,individual):
-#        
-#        fitness=0
-#        for j in range(self.individual_size-1):
-#            #.. and compare with each individual in all other positions
-#            for k in range(j+1,self.max_symbol):
-#                if (individual[j]!=individual[k]): # queens are not at the same line
-#                    if((individual[j]+(k-j))!=individual[k]): # queen are not at the same superior diagonal
-#                        if((individual[j]-(k-j))!=individual[k]): # queens are not at the same inferior diagonal
-#                            fitness=fitness+1; 
-#        return fitness
-#    
-#    def printSolution(self,solution):
-#        
-#        for i in range(self.individual_size):
-#            for j in range(self.individual_size):
-#                if i+1 == solution[j]:
-#                    output='Q '
-#                else:
-#                    output = '. '
-#                if j == self.individual_size-1:
-#                    print(output)
-#                else:
-#                    print(output),    
+    def bin_to_dec(self,bin_x):
+        s=''.join(str(x) for x in bin_x)
+        return(int(s,2))
+               
+    def fitness(self,population):
+    
+        fitnessPop=[]
+        #calculate the fitness for each individual of population
+        for individual in population:
+            fitnessPop.append(self.getFitness(individual))
+    
+        return fitnessPop
+    
+    def getIndividualSize(self):
+        return self.individual_size
+    
+    def getMaxGeneSymbol(self):
+        return self.max_symbol
+    
+    def getMinGeneSymbol(self):
+        return self.min_symbol
+    
+    
+    def getFitness(self,individual):
+        
+        dec_ind_x1 = self.bin_to_dec(individual[:4])
+        dec_ind_x2 = self.bin_to_dec(individual[4:])
+        real_x1 = self.x1Real(dec_ind_x1)
+        real_x2 = self.x2Real(dec_ind_x2)
+        print(self.Rosembrock_Function(real_x1,real_x2))
+        fitness = 10.0/(1+self.Rosembrock_Function(real_x1,real_x2))
+        print(fitness)
+        return fitness
+    
+    def printSolution(self,solution):
+        
+        print(solution)
+        dec_ind_x1 = self.bin_to_dec(solution[:4])
+        dec_ind_x2 = self.bin_to_dec(solution[4:])
+        real_x1 = self.x1Real(dec_ind_x1)
+        real_x2 = self.x2Real(dec_ind_x2)
+        print('x1=%g'%real_x1)
+        print('x2=%g'%real_x2)
+        print('f(x1,x2)=%g'%self.Rosembrock_Function(real_x1,real_x2))

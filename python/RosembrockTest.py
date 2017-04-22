@@ -9,12 +9,12 @@ import sys
 import os.path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-from genetic_algorithm.ga import genetic_algorithm
+from genetic_algorithm.ga_numeric import genetic_algorithm
 from RosembrockExample import Rosembrock
 import matplotlib.pyplot as plt
 
 
-NumIndividuals = 20
+NumIndividuals = 10
 MinX1 = -2
 MaxX1 = 2
 MinX2 = -1
@@ -24,14 +24,13 @@ MutationRate = 0.2
 
 problem = Rosembrock(MinX1, MaxX1,MinX2,MaxX2, IndividualSize)
 
-MaxGeneration = 2000
-Target = 28
+MaxGeneration = 10
+Target = 0.00001
 Elitism = True
 
 ClassHandle  = genetic_algorithm(problem,MutationRate,Elitism)
 fit,generation = ClassHandle.search(NumIndividuals, MaxGeneration, Target)
 
-#interaction=[i for i in range(generation)]
-#
-#plt.plot(interaction,fit)
-#plt.show()  
+interaction=[i for i in range(generation)]
+plt.plot(interaction,fit)
+plt.show()  
