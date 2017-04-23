@@ -24,13 +24,17 @@ class Rosembrock(object):
         
         
     def Rosembrock_Function(self, x1,x2):
-        return (1.0-x1)**2 + 1*(x2-x1**2)**2 
+        return (1.0-x1)**2 + 100.0*(x2-x1**2)**2 
         
     def x1Real(self, x1Decimal):
-        return self.x1_min+(self.x1_max - self.x1_min)/(2.0**self.individual_size/2)*x1Decimal
+        Precision = (self.x1_max - self.x1_min)/((2.0**(self.individual_size/2)) - 1)
+        #print('Precision x1 = %g' %Precision)
+        return self.x1_min+Precision*x1Decimal
     
     def x2Real(self, x2Decimal):
-        return self.x2_min+(self.x2_max - self.x2_min)/(2.0**self.individual_size/2)*x2Decimal
+        Precision = (self.x2_max - self.x2_min)/((2.0**(self.individual_size/2)) - 1)
+        #print('Precision x2 = %g' %Precision)
+        return self.x2_min+Precision*x2Decimal
         
     def initPopulation(self, num_individuals):
         
@@ -69,20 +73,23 @@ class Rosembrock(object):
     
     def getFitness(self,individual):
         
-        dec_ind_x1 = self.bin_to_dec(individual[:4])
-        dec_ind_x2 = self.bin_to_dec(individual[4:])
+        dec_ind_x1 = self.bin_to_dec(individual[:self.individual_size/2])
+        dec_ind_x2 = self.bin_to_dec(individual[self.individual_size/2:])
         real_x1 = self.x1Real(dec_ind_x1)
         real_x2 = self.x2Real(dec_ind_x2)
-        print(self.Rosembrock_Function(real_x1,real_x2))
-        fitness = 10.0/(1+self.Rosembrock_Function(real_x1,real_x2))
-        print(fitness)
+        #print(self.Rosembrock_Function(real_x1,real_x2))
+        fitness = 10.0/(1.0+self.Rosembrock_Function(real_x1,real_x2))
+        #print(fitness)
         return fitness
     
     def printSolution(self,solution):
         
+        print('Solution:')
         print(solution)
-        dec_ind_x1 = self.bin_to_dec(solution[:4])
-        dec_ind_x2 = self.bin_to_dec(solution[4:])
+        dec_ind_x1 = self.bin_to_dec(solution[:self.individual_size/2])
+        dec_ind_x2 = self.bin_to_dec(solution[self.individual_size/2:])
+        #print(dec_ind_x1)
+        #print(dec_ind_x2)
         real_x1 = self.x1Real(dec_ind_x1)
         real_x2 = self.x2Real(dec_ind_x2)
         print('x1=%g'%real_x1)

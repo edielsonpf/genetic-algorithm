@@ -29,7 +29,13 @@ class genetic_algorithm(object):
             randomPosition = int(np.random.uniform(0,self.problem.getIndividualSize()-1))
             print('Mutation at position: %d' %randomPosition)
             #get a random value for changing in the individual position selected before
-            randomValue = int(np.random.uniform(self.problem.getMinGeneSymbol(),self.problem.getMaxGeneSymbol()))
+            randomValue = np.random.uniform(self.problem.getMinGeneSymbol(),self.problem.getMaxGeneSymbol())
+         
+            if(randomValue <= 0.5):
+                randomValue = int(randomValue)
+            else:
+                randomValue = int(randomValue+1)
+            
             print('New gene value: %d' %randomValue)
             
             individual[randomPosition]=randomValue
@@ -134,8 +140,8 @@ class genetic_algorithm(object):
         #Get the values from A.
         #If the random number is less than the cumulative probability then
         #that's the number to use from A.
-#         print(randomNumber)
-#         print(cumSumP)
+#        print('Random: %g' %randomNumber)
+#        print(cumSumP)
         for i, total in enumerate(cumSumP):
             if randomNumber < total:
                 break

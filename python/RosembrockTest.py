@@ -14,17 +14,17 @@ from RosembrockExample import Rosembrock
 import matplotlib.pyplot as plt
 
 
-NumIndividuals = 10
+NumIndividuals = 100
 MinX1 = -2
 MaxX1 = 2
 MinX2 = -1
-MaxX2=3
-IndividualSize = 8
-MutationRate = 0.2
+MaxX2 = 3
+IndividualSize = 16
+MutationRate = 0.02
 
-problem = Rosembrock(MinX1, MaxX1,MinX2,MaxX2, IndividualSize)
+problem = Rosembrock(MinX1, MaxX1, MinX2, MaxX2, IndividualSize)
 
-MaxGeneration = 10
+MaxGeneration = 100
 Target = 0.00001
 Elitism = True
 
