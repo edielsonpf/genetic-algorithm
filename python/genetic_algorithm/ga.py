@@ -116,62 +116,58 @@ class genetic_algorithm(object):
         return new_individual_x,new_individual_y
     
     
-    def __selection(self):
-    
-        sorted_population = sorted(self.population,key=self.problem.getFitness, reverse=True)        
-        pop_fit = self.problem.fitness(sorted_population)
+    def __get_cum_sum_for_pop(self):
+        self.population = sorted(self.population, key=self.problem.getFitness, reverse=True)
+        
+        pop_fit = self.problem.fitness(self.population)
 #         print(pop_fit)
-        
-        prob_fit = []
-        for individual in pop_fit:
-            prob_fit.append(1.0*individual/np.sum(pop_fit))
+
+        pop_fit_sum = np.sum(pop_fit)
+        prob_fit = [1.0*individual/pop_fit_sum for individual in pop_fit]
 #         print(prob_fit)
-        
-        #Get the cumulative sum of the probabilities.
-        cumSumP = np.cumsum(prob_fit)
-        #Get our random numbers - one for each column.
+
+        # Get the cumulative sum of the probabilities.
+        return np.cumsum(prob_fit)
+
+    def __selection(self, cumSumP):
+        # Get our random numbers - one for each column.
         randomNumber = np.random.rand()
-        #Get the values from A.
-        #If the random number is less than the cumulative probability then
-        #that's the number to use from A.
-#         print(randomNumber)
-#         print(cumSumP)
-        for i, total in enumerate(cumSumP):
-            if randomNumber < total:
-                break
-        self.population = sorted_population
+        
+        i = bisect_left(cumSumP, randomNumber)
         selected = self.population[i]
-        #Display it. Uncomment for log.
-        print("Selected individual [%d] = %s" %(i,selected))
+        
+        # Display it. Uncomment for log.
+#         print("Selected individual [%d] = %s" %(i,selected))
         return selected
-        
-    def __newPopulation(self,population_size):
-        
+
+    def __newPopulation(self, population_size):
         new_population = []
-        offset_population_index=0
-        
+        offset_population_index = 0
+
         if self.__elitism:
             new_population.append(self.population[self.best_individual])
-            offset_population_index=1
-        
-        
-        for i in range(offset_population_index,population_size,2):
-            #Selection
-            x = self.__selection()
-            y = self.__selection()
+            offset_population_index = 1
             
-            #Crossover
-            new_individual_x,new_individual_y = self.__crossover(x,y)
-            
-            #Mutation
+        cumSumP = self.__get_cum_sum_for_pop()
+
+        for i in range(offset_population_index, population_size, 2):
+            # Selection
+            x = self.__selection(cumSumP)
+            y = self.__selection(cumSumP)
+
+            # Crossover
+            new_individual_x, new_individual_y = self.__crossover(x, y)
+
+            # Mutation
             new_individual_x = self.__mutation(new_individual_x)
             new_individual_y = self.__mutation(new_individual_y)
-            
-            print('New individual x: %s'%new_individual_x)
-            print('New individual y: %s'%new_individual_y)
-            
+
+#             print('New individual x: %s'%new_individual_x)
+#             print('New individual y: %s'%new_individual_y)
+
             new_population.append(new_individual_x)
             new_population.append(new_individual_y)
+        
         return new_population
     
     def search(self, population_size, max_generation, target):
@@ -190,8 +186,7 @@ class genetic_algorithm(object):
         fit_historical.append(self.best_fit)
                     
         while (self.best_fit < target) and (generation < max_generation):
-            
-            generation=generation+1
+            generation += 1
             
             self.population=self.__newPopulation(population_size)      
             
